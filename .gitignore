@@ -3,3 +3,4 @@ Thumbs.db
 .DS_Cache
 server/ui.js
 *.sqlite3
+*.log

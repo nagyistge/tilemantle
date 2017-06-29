@@ -33,7 +33,7 @@
     "body-parser": "^1.13.1",
     "chalk": "0.5.1",
     "express": "^4.12.4",
-    "gdal": "^0.5.0",
+    "gdal": "^0.9.4",
     "humanize-duration": "2.4.0",
     "json5": "^0.4.0",
     "leaflet-draw": "^0.2.3",
