@@ -95,4 +95,32 @@ SQLite.prototype.reset = function(callback) {
 	this.db.run('DELETE FROM queue', callback);
 };
 
+SQLite.prototype.beginTransaction = function(callback) {
+	this.db.beginTransaction(function(err, transaction) {
+		if(err) {
+			callback(err);
+		} else {
+			callback(false, {
+				insert: function(preset, x, y, z, callback) {
+					transaction.run('INSERT INTO queue (x, y, z, preset, ts) VALUES (?, ?, ?, ?, ?)', [
+						x, y, z, preset, Date.now()
+					], function (err) {
+						if (err && err.message.indexOf('UNIQUE constraint failed') > -1) {
+							// ignore errors saying it's already in the queue
+							return callback();
+						}
+						callback(err);
+					})
+				},
+				commit: function(callback) {
+					transaction.commit(callback);
+				},
+				rollback: function(callback) {
+					transaction.rollback(callback);
+				}
+			});
+		}
+	});
+};
+
 module.exports = SQLite;
