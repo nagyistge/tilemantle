@@ -94,4 +94,24 @@ TileMantleQueue.prototype.reset = function(callback) {
 	this.store.reset(callback);
 };
 
+TileMantleQueue.prototype.beginTransaction = function(callback) {
+	this.store.beginTransaction(function(err, transaction) {
+		if(err) {
+			callback(err);
+		} else {
+			callback(null, {
+				insert: function(preset, x, y, z, callback) {
+					transaction.insert(preset.name, x, y, z, callback);
+				},
+				commit: function(callback) {
+					transaction.commit(callback);
+				},
+				rollback: function(callback) {
+					transaction.rollback(callback);
+				}
+			})
+		}
+	});
+};
+
 module.exports = TileMantleQueue;
